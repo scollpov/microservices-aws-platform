@@ -35,3 +35,22 @@ resource "aws_iam_role_policy_attachment" "github_ecr" {
   role       = aws_iam_role.github_actions.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
 }
+
+resource "aws_iam_role_policy" "github_ecs_deploy" {
+  name = "github-ecs-deploy"
+  role = aws_iam_role.github_actions.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ecs:UpdateService",
+          "ecs:DescribeServices"
+        ]
+        Resource = aws_ecs_service.gateway.id
+      }
+    ]
+  })
+}

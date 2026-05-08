@@ -36,3 +36,11 @@ jobs:
 
           docker build -t $IMAGE_URI ./services/gateway
           docker push $IMAGE_URI
+
+      - name: Force ECS redeploy
+        run: |
+          aws ecs update-service \
+            --cluster microservices-cluster \
+            --service gateway-service \
+            --force-new-deployment \
+            --region ${{ env.AWS_REGION }}

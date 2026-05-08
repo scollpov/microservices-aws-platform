@@ -30,6 +30,13 @@ resource "aws_ecs_task_definition" "gateway" {
         }
       ]
 
+      environment = [
+        {
+          name  = "ORDERS_SERVICE_URL"
+          value = "http://orders.microservices.local:8080"
+        }
+      ]
+
       logConfiguration = {
         logDriver = "awslogs"
         options = {
@@ -63,6 +70,21 @@ resource "aws_ecs_task_definition" "orders" {
           containerPort = 8080
           hostPort      = 8080
           protocol      = "tcp"
+        }
+      ]
+
+      environment = [
+        {
+          name  = "SPRING_DATASOURCE_URL"
+          value = "jdbc:mysql://${aws_db_instance.orders.address}:3306/ordersdb"
+        },
+        {
+          name  = "SPRING_DATASOURCE_USERNAME"
+          value = "ordersuser"
+        },
+        {
+          name  = "SPRING_DATASOURCE_PASSWORD"
+          value = "ChangeMe123!"
         }
       ]
 
@@ -123,4 +145,36 @@ resource "aws_ecs_service" "orders" {
     security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = true
   }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.orders.arn
+  }
+}
+
+#-------------------------
+# Discover private DNS
+#-------------------------
+resource "aws_service_discovery_private_dns_namespace" "main" {
+  name = "microservices.local"
+  vpc  = aws_vpc.main.id
+}
+
+#--------------------------
+# Discover service (orders)
+#--------------------------
+resource "aws_service_discovery_service" "orders" {
+  name = "orders"
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.main.id
+
+    dns_records {
+      type = "A"
+      ttl  = 10
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {}
 }

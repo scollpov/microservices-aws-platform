@@ -146,6 +146,12 @@ resource "aws_cognito_user_pool_client" "client" {
     "profile"
   ]
 
+  explicit_auth_flows = [
+    "ALLOW_USER_PASSWORD_AUTH",
+    "ALLOW_REFRESH_TOKEN_AUTH",
+    "ALLOW_USER_SRP_AUTH"
+  ]
+
   callback_urls = [
     "http://localhost:8080/callback"
   ]

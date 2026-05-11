@@ -30,12 +30,16 @@ resource "aws_ecs_task_definition" "gateway" {
         }
       ]
 
-      environment = [
-        {
-          name  = "ORDERS_SERVICE_URL"
-          value = "http://orders.microservices.local:8081"
-        }
-      ]
+  environment = [
+    {
+      name  = "ORDERS_SERVICE_URL"
+      value = "http://orders.microservices.local:8081"
+    },
+    {
+      name  = "PAYMENTS_SERVICE_URL"
+      value = "http://payments.microservices.local:8082"
+    }
+  ]
 
       logConfiguration = {
         logDriver = "awslogs"

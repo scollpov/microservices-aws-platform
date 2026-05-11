@@ -33,7 +33,7 @@ resource "aws_ecs_task_definition" "gateway" {
       environment = [
         {
           name  = "ORDERS_SERVICE_URL"
-          value = "http://orders.microservices.local:8080"
+          value = "http://orders.microservices.local:8081"
         }
       ]
 
@@ -67,8 +67,8 @@ resource "aws_ecs_task_definition" "orders" {
 
       portMappings = [
         {
-          containerPort = 8080
-          hostPort      = 8080
+          containerPort = 8081
+          hostPort      = 8081
           protocol      = "tcp"
         }
       ]

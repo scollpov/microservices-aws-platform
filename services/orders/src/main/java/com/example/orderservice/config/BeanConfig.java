@@ -13,8 +13,9 @@ import org.springframework.context.annotation.Configuration;
 public class BeanConfig {
 
     @Bean
-    public CreateOrderUseCase createOrderUseCase(OrderRepositoryPort repo, OrderEventPublisher event){
-        return new CreateOrderService(repo, event);
+//    public CreateOrderUseCase createOrderUseCase(OrderRepositoryPort repo, OrderEventPublisher event){
+    public CreateOrderUseCase createOrderUseCase(OrderRepositoryPort repo){
+        return new CreateOrderService(repo, null);
     }
 
     @Bean

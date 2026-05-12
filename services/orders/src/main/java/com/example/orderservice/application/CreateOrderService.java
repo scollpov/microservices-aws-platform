@@ -9,11 +9,11 @@ import com.example.orderservice.ports.out.OrderRepositoryPort;
 public class CreateOrderService implements CreateOrderUseCase {
 
     private final OrderRepositoryPort orderRepositoryPort;
-    private final OrderEventPublisher eventPublisher;
+//    private final OrderEventPublisher eventPublisher;
 
     public CreateOrderService(OrderRepositoryPort orderRepositoryPort, OrderEventPublisher eventPublisher) {
         this.orderRepositoryPort = orderRepositoryPort;
-        this.eventPublisher = eventPublisher;
+//        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -21,6 +21,6 @@ public class CreateOrderService implements CreateOrderUseCase {
         Order order = new Order(id, amount);
         orderRepositoryPort.save(order);
 
-        eventPublisher.publish(new OrderCreatedEvent(order.getId(), order.getAmount()));
+//        eventPublisher.publish(new OrderCreatedEvent(order.getId(), order.getAmount()));
     }
 }

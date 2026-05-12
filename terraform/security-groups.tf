@@ -70,6 +70,13 @@ resource "aws_security_group" "ecs_sg" {
     self      = true
   }
 
+  ingress {
+    from_port = 9092
+    to_port   = 9092
+    protocol  = "tcp"
+    self      = true
+  }
+
   egress {
     from_port   = 0
     to_port     = 0

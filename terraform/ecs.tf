@@ -30,16 +30,16 @@ resource "aws_ecs_task_definition" "gateway" {
         }
       ]
 
-  environment = [
-    {
-      name  = "ORDERS_SERVICE_URL"
-      value = "http://orders.microservices.local:8081"
-    },
-    {
-      name  = "PAYMENTS_SERVICE_URL"
-      value = "http://payments.microservices.local:8082"
-    }
-  ]
+      environment = [
+        {
+          name  = "ORDERS_SERVICE_URL"
+          value = "http://orders.microservices.local:8081"
+        },
+        {
+          name  = "PAYMENTS_SERVICE_URL"
+          value = "http://payments.microservices.local:8082"
+        }
+      ]
 
       logConfiguration = {
         logDriver = "awslogs"
@@ -104,15 +104,70 @@ resource "aws_ecs_task_definition" "orders" {
   ])
 }
 
+#------------------------------
+# Task definition (kafka)
+#------------------------------
+resource "aws_ecs_task_definition" "kafka" {
+  family                   = "kafka-task"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "512"
+  memory                   = "1024"
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+
+  container_definitions = jsonencode([
+    {
+      name  = "kafka"
+      image = "confluentinc/cp-kafka:7.6.1"
+
+      portMappings = [
+        {
+          containerPort = 9092
+          hostPort      = 9092
+          protocol      = "tcp"
+        },
+        {
+          containerPort = 9093
+          hostPort      = 9093
+          protocol      = "tcp"
+        }
+      ]
+
+      environment = [
+        { name = "KAFKA_NODE_ID", value = "1" },
+        { name = "KAFKA_PROCESS_ROLES", value = "broker,controller" },
+        { name = "KAFKA_CONTROLLER_QUORUM_VOTERS", value = "1@kafka.microservices.local:9093" },
+        { name = "KAFKA_LISTENERS", value = "PLAINTEXT://:9092,CONTROLLER://:9093" },
+        { name = "KAFKA_ADVERTISED_LISTENERS", value = "PLAINTEXT://kafka.microservices.local:9092" },
+        { name = "KAFKA_LISTENER_SECURITY_PROTOCOL_MAP", value = "PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT" },
+        { name = "KAFKA_CONTROLLER_LISTENER_NAMES", value = "CONTROLLER" },
+        { name = "KAFKA_INTER_BROKER_LISTENER_NAME", value = "PLAINTEXT" },
+        { name = "CLUSTER_ID", value = "MkU3OEVBNTcwNTJENDM2Qk" },
+        { name = "KAFKA_ENABLED", value = "true" },
+        { name = "SPRING_KAFKA_BOOTSTRAP_SERVERS", value = "kafka.microservices.local:9092"}	
+      ]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.kafka.name
+          awslogs-region        = "eu-west-1"
+          awslogs-stream-prefix = "ecs"
+        }
+      }
+    }
+  ])
+}
+
 #-------------------------
 # ECS Service (gateway)
 #-------------------------
 resource "aws_ecs_service" "gateway" {
-  name            = "gateway-service"
-  cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.gateway.arn
-  desired_count   = 1
-  launch_type     = "FARGATE"
+  name                              = "gateway-service"
+  cluster                           = aws_ecs_cluster.main.id
+  task_definition                   = aws_ecs_task_definition.gateway.arn
+  desired_count                     = 1
+  launch_type                       = "FARGATE"
   health_check_grace_period_seconds = 120
 
   network_configuration {
@@ -157,6 +212,27 @@ resource "aws_ecs_service" "orders" {
 }
 
 #-------------------------
+# ECS Service (kafka)
+#-------------------------
+resource "aws_ecs_service" "kafka" {
+  name            = "kafka-service"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.kafka.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = [aws_subnet.public_1.id, aws_subnet.public_2.id]
+    security_groups  = [aws_security_group.ecs_sg.id]
+    assign_public_ip = true
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.kafka.arn
+  }
+}
+
+#-------------------------
 # Discover private DNS
 #-------------------------
 resource "aws_service_discovery_private_dns_namespace" "main" {
@@ -169,6 +245,26 @@ resource "aws_service_discovery_private_dns_namespace" "main" {
 #--------------------------
 resource "aws_service_discovery_service" "orders" {
   name = "orders"
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.main.id
+
+    dns_records {
+      type = "A"
+      ttl  = 10
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {}
+}
+
+#--------------------------
+# Discover service (kafka)
+#--------------------------
+resource "aws_service_discovery_service" "kafka" {
+  name = "kafka"
 
   dns_config {
     namespace_id = aws_service_discovery_private_dns_namespace.main.id

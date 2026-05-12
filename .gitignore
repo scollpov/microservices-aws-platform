@@ -1,5 +1,6 @@
 target/
 *.iml
+*.tfstate
 .idea/
 .terraform/
 terraform.tfstate

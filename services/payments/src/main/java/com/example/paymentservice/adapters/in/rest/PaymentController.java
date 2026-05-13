@@ -1,29 +1,24 @@
 package com.example.paymentservice.adapters.in.rest;
 
-import com.example.paymentservice.ports.in.CreatePaymentUseCase;
-import org.springframework.web.bind.annotation.PostMapping;
+import com.example.paymentservice.application.GetPaymentUseCase;
+import com.example.paymentservice.domain.Payment;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @RequestMapping("/payments")
+@RestController
 public class PaymentController {
 
-    private final CreatePaymentUseCase useCase;
+    private final GetPaymentUseCase getPaymentUseCase;
 
-    public PaymentController(CreatePaymentUseCase useCase) {
-        this.useCase = useCase;
-    }
-
-    @PostMapping
-    public void create(@RequestBody PaymentRequest request){
-        useCase.createPayment(request.orderId(), request.amount());
+    public PaymentController(GetPaymentUseCase getPaymentUseCase) {
+        this.getPaymentUseCase = getPaymentUseCase;
     }
 
     @GetMapping("/{id}")
     public Payment get(@PathVariable String id) {
-        return useCase.getPaymentById(id);
+        return getPaymentUseCase.getPaymentById(id);
     }
 }

@@ -1,20 +1,12 @@
 package com.example.paymentservice.config;
 
 import com.example.paymentservice.application.GetPaymentUseCase;
-import com.example.paymentservice.application.ProcessPaymentUseCase;
 import com.example.paymentservice.ports.out.PaymentRepositoryPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class BeanConfig {
-
-    @Bean
-    public ProcessPaymentUseCase processPaymentUseCase(
-            PaymentRepositoryPort paymentRepositoryPort
-    ) {
-        return new ProcessPaymentUseCase(paymentRepositoryPort);
-    }
 
     @Bean
     public GetPaymentUseCase getPaymentUseCase(

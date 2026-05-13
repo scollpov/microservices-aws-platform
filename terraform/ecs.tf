@@ -105,6 +105,58 @@ resource "aws_ecs_task_definition" "orders" {
 }
 
 #------------------------------
+# Task definition (payments)
+#------------------------------
+resource "aws_ecs_task_definition" "payments" {
+  family                   = "payments-task"
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
+  cpu                      = "256"
+  memory                   = "512"
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+
+  container_definitions = jsonencode([
+    {
+      name  = "payments"
+      image = "${aws_ecr_repository.payments.repository_url}:latest"
+
+      portMappings = [
+        {
+          containerPort = 8082
+          hostPort      = 8082
+          protocol      = "tcp"
+        }
+      ]
+
+#      environment = [
+#        {
+#          name  = "SPRING_DATASOURCE_URL"
+#          value = "jdbc:mysql://${aws_db_instance.payments.address}:3306/paymentsdb"
+#        },
+#        {
+#          name  = "SPRING_DATASOURCE_USERNAME"
+#          value = "paymentsuser"
+#        },
+#        {
+#          name  = "SPRING_DATASOURCE_PASSWORD"
+#          value = "ChangeMe123!"
+#        }
+#      ]
+
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.payments.name
+          awslogs-region        = "eu-west-1"
+          awslogs-stream-prefix = "ecs"
+        }
+      }
+    }
+  ])
+}
+
+
+#------------------------------
 # Task definition (kafka)
 #------------------------------
 resource "aws_ecs_task_definition" "kafka" {
@@ -212,6 +264,27 @@ resource "aws_ecs_service" "orders" {
 }
 
 #-------------------------
+# ECS Service (payments)
+#-------------------------
+resource "aws_ecs_service" "payments" {
+  name            = "payments-service"
+  cluster         = aws_ecs_cluster.main.id
+  task_definition = aws_ecs_task_definition.payments.arn
+  desired_count   = 1
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    subnets          = [aws_subnet.private_1.id, aws_subnet.private_2.id]
+    security_groups  = [aws_security_group.ecs_sg.id]
+    assign_public_ip = false
+  }
+
+  service_registries {
+    registry_arn = aws_service_discovery_service.payments.arn
+  }
+}
+
+#-------------------------
 # ECS Service (kafka)
 #-------------------------
 resource "aws_ecs_service" "kafka" {
@@ -245,6 +318,26 @@ resource "aws_service_discovery_private_dns_namespace" "main" {
 #--------------------------
 resource "aws_service_discovery_service" "orders" {
   name = "orders"
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.main.id
+
+    dns_records {
+      type = "A"
+      ttl  = 10
+    }
+
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {}
+}
+
+#-----------------------------
+# Discover service (payments)
+#-----------------------------
+resource "aws_service_discovery_service" "payments" {
+  name = "payments"
 
   dns_config {
     namespace_id = aws_service_discovery_private_dns_namespace.main.id

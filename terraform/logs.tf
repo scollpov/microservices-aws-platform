@@ -8,6 +8,11 @@ resource "aws_cloudwatch_log_group" "orders" {
   retention_in_days = 1
 }
 
+resource "aws_cloudwatch_log_group" "payments" {
+  name              = "/ecs/payments-service"
+  retention_in_days = 1
+}
+
 resource "aws_cloudwatch_log_group" "kafka" {
   name              = "/ecs/kafka-service"
   retention_in_days = 1

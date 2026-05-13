@@ -71,6 +71,13 @@ resource "aws_security_group" "ecs_sg" {
   }
 
   ingress {
+    from_port = 8082
+    to_port   = 8082
+    protocol  = "tcp"
+    self      = true
+  }
+
+  ingress {
     from_port = 9092
     to_port   = 9092
     protocol  = "tcp"

@@ -78,18 +78,11 @@ resource "aws_ecs_task_definition" "orders" {
       ]
 
       environment = [
-        {
-          name  = "SPRING_DATASOURCE_URL"
-          value = "jdbc:mysql://${aws_db_instance.orders.address}:3306/ordersdb"
-        },
-        {
-          name  = "SPRING_DATASOURCE_USERNAME"
-          value = "ordersuser"
-        },
-        {
-          name  = "SPRING_DATASOURCE_PASSWORD"
-          value = "ChangeMe123!"
-        }
+        { name  = "SPRING_DATASOURCE_URL", value = "jdbc:mysql://${aws_db_instance.orders.address}:3306/ordersdb"},
+        { name  = "SPRING_DATASOURCE_USERNAME", value = "ordersuser"},
+        { name  = "SPRING_DATASOURCE_PASSWORD", value = "ChangeMe123!"},
+        { name = "KAFKA_ENABLED", value = "true" },
+        { name = "SPRING_KAFKA_BOOTSTRAP_SERVERS", value = "kafka.microservices.local:9092" }
       ]
 
       logConfiguration = {
@@ -128,20 +121,12 @@ resource "aws_ecs_task_definition" "payments" {
         }
       ]
 
-#      environment = [
-#        {
-#          name  = "SPRING_DATASOURCE_URL"
-#          value = "jdbc:mysql://${aws_db_instance.payments.address}:3306/paymentsdb"
-#        },
-#        {
-#          name  = "SPRING_DATASOURCE_USERNAME"
-#          value = "paymentsuser"
-#        },
-#        {
-#          name  = "SPRING_DATASOURCE_PASSWORD"
-#          value = "ChangeMe123!"
-#        }
-#      ]
+      environment = [
+        { name  = "SPRING_DATASOURCE_URL", value = "jdbc:mysql://${aws_db_instance.payments.address}:3306/paymentsdb"},
+        { name = "SPRING_DATASOURCE_USERNAME", value = "paymentsuser"},
+        { name = "SPRING_DATASOURCE_PASSWORD", value = "ChangeMe123!"},
+        { name = "SPRING_KAFKA_BOOTSTRAP_SERVERS", value = "kafka.microservices.local:9092" }
+      ]
 
       logConfiguration = {
         logDriver = "awslogs"
@@ -274,9 +259,9 @@ resource "aws_ecs_service" "payments" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = [aws_subnet.private_1.id, aws_subnet.private_2.id]
+    subnets          = [aws_subnet.public_1.id, aws_subnet.public_2.id]
     security_groups  = [aws_security_group.ecs_sg.id]
-    assign_public_ip = false
+    assign_public_ip = true
   }
 
   service_registries {

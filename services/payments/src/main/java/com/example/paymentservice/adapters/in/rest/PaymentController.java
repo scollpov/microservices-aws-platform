@@ -21,4 +21,9 @@ public class PaymentController {
     public Payment get(@PathVariable String id) {
         return getPaymentUseCase.getPaymentById(id);
     }
+
+    @GetMapping("/order/{orderId}")
+    public Payment getByOrderId(@PathVariable String orderId) {
+        return getPaymentUseCase.getPaymentByOrderId(orderId);
+    }
 }

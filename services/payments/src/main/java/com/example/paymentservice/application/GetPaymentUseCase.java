@@ -14,4 +14,8 @@ public class GetPaymentUseCase {
     public Payment getPaymentById(String id) {
         return paymentRepositoryPort.findById(id);
     }
+
+    public Payment getPaymentByOrderId(String orderId) {
+        return paymentRepositoryPort.findByOrderId(orderId);
+    }
 }

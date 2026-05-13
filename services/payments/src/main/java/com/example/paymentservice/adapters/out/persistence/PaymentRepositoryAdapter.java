@@ -37,4 +37,17 @@ public class PaymentRepositoryAdapter implements PaymentRepositoryPort {
                 entity.getStatus()
         );
     }
+
+    @Override
+    public Payment findByOrderId(String orderId) {
+        PaymentEntity entity = repository.findByOrderId(orderId)
+                .orElseThrow(() -> new RuntimeException("Payment not found for order id: " + orderId));
+
+        return new Payment(
+                entity.getId(),
+                entity.getOrderId(),
+                entity.getAmount(),
+                entity.getStatus()
+        );
+    }
 }

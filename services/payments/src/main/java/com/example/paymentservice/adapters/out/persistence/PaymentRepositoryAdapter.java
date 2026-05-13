@@ -33,7 +33,8 @@ public class PaymentRepositoryAdapter implements PaymentRepositoryPort {
         return new Payment(
                 entity.getId(),
                 entity.getOrderId(),
-                entity.getAmount()
+                entity.getAmount(),
+                entity.getStatus()
         );
     }
 }

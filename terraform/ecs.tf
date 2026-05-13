@@ -180,8 +180,6 @@ resource "aws_ecs_task_definition" "kafka" {
         { name = "KAFKA_CONTROLLER_LISTENER_NAMES", value = "CONTROLLER" },
         { name = "KAFKA_INTER_BROKER_LISTENER_NAME", value = "PLAINTEXT" },
         { name = "CLUSTER_ID", value = "MkU3OEVBNTcwNTJENDM2Qk" },
-        { name = "KAFKA_ENABLED", value = "true" },
-        { name = "SPRING_KAFKA_BOOTSTRAP_SERVERS", value = "kafka.microservices.local:9092" }
       ]
 
       logConfiguration = {

@@ -23,5 +23,7 @@ public class CreatePaymentService implements CreatePaymentUseCase {
                 "PAID");
 
         repository.save(payment);
+
+	System.out.println("PAYMENT SAVED FOR ORDER: " + orderId());
     }
 }

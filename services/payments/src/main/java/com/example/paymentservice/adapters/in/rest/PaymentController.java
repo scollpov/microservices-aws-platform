@@ -2,6 +2,7 @@ package com.example.paymentservice.adapters.in.rest;
 
 import com.example.paymentservice.ports.in.CreatePaymentUseCase;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,5 +20,10 @@ public class PaymentController {
     @PostMapping
     public void create(@RequestBody PaymentRequest request){
         useCase.createPayment(request.orderId(), request.amount());
+    }
+
+    @GetMapping("/{id}")
+    public Payment get(@PathVariable String id) {
+        return useCase.getPaymentById(id);
     }
 }

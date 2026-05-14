@@ -49,7 +49,11 @@ resource "aws_iam_role_policy" "github_ecs_deploy" {
           "ecs:UpdateService",
           "ecs:DescribeServices"
         ]
-        Resource = aws_ecs_service.gateway.id
+        Resource = [
+          aws_ecs_service.gateway.id,
+          aws_ecs_service.orders.id,
+          aws_ecs_service.payments.id
+        ]      
       }
     ]
   })

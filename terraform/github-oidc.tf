@@ -23,7 +23,7 @@ resource "aws_iam_role" "github_actions" {
 
         Condition = {
           StringLike = {
-            "token.actions.githubusercontent.com:sub" = "repo:scollpov/microservices-aws-platform:*"
+            "token.actions.githubusercontent.com:sub" = "repo:scollpov/microservices-aws-platform:ref:refs/heads/main"
           }
         }
       }

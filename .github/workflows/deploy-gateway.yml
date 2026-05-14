@@ -1,9 +1,12 @@
-name: Deploy Gateway
+name: Gateway CI/CD
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'services/gateway/**'
+      - '.github/workflows/deploy-gateway.yml'
 
 permissions:
   id-token: write
@@ -14,7 +17,7 @@ env:
   ECR_REPOSITORY: gateway-service
 
 jobs:
-  build-and-push:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:

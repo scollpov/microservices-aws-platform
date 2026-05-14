@@ -125,9 +125,6 @@ resource "aws_route_table_association" "public_2" {
 #-------------------------
 resource "aws_cognito_user_pool" "pool" {
   name = "microservices-user-pool"
-
-  #  username_attributes      = ["email"]
-  #  auto_verified_attributes = ["email"]
 }
 
 #-------------------------
@@ -158,10 +155,6 @@ resource "aws_cognito_user_pool_client" "client" {
   callback_urls = [
     "http://localhost:8080/callback"
   ]
-
-  #  logout_urls = [
-  #   "http://localhost:8080"
-  #  ]
 
   supported_identity_providers = ["COGNITO"]
 }

@@ -6,7 +6,7 @@ resource "aws_ecs_cluster" "main" {
 }
 
 #------------------------------
-# Task definition (gateway) 
+# Task definition (gateway)
 #------------------------------
 resource "aws_ecs_task_definition" "gateway" {
   family                   = "gateway-task"

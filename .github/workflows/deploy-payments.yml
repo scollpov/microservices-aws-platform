@@ -1,9 +1,12 @@
-name: Deploy Payments
+name: Payments CI/CD
 
 on:
   push:
     branches:
       - main
+    paths:
+      - 'services/payments/**'
+      - '.github/workflows/deploy-payments.yml'
 
 permissions:
   id-token: write
@@ -14,7 +17,7 @@ env:
   ECR_REPOSITORY: payments-service
 
 jobs:
-  build-and-push:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:

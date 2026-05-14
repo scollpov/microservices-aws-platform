@@ -5,8 +5,4 @@ import com.example.paymentservice.domain.Payment;
 public interface PaymentRepositoryPort {
 
     void save(Payment payment);
-
-    Payment findById(String id);
-
-    Payment findByOrderId(String orderId);
 }

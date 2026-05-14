@@ -80,7 +80,7 @@ resource "aws_subnet" "private_2" {
   availability_zone = "eu-west-1b"
 
   tags = {
-    Name = "private-subnet-1"
+    Name = "private-subnet-2"
   }
 }
 

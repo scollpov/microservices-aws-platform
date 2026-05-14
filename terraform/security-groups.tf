@@ -30,24 +30,24 @@ resource "aws_security_group" "alb_sg" {
 #-------------------------
 # Gateway security group
 #-------------------------
-resource "aws_security_group" "gateway_sg" {
-  name   = "gateway-sg"
-  vpc_id = aws_vpc.main.id
-
-  ingress {
-    from_port       = 8080
-    to_port         = 8080
-    protocol        = "tcp"
-    security_groups = [aws_security_group.alb_sg.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
+#resource "aws_security_group" "gateway_sg" {
+#  name   = "gateway-sg"
+#  vpc_id = aws_vpc.main.id
+#
+#  ingress {
+#    from_port       = 8080
+#    to_port         = 8080
+#    protocol        = "tcp"
+#    security_groups = [aws_security_group.alb_sg.id]
+#  }
+#
+#  egress {
+#    from_port   = 0
+#    to_port     = 0
+#    protocol    = "-1"
+#    cidr_blocks = ["0.0.0.0/0"]
+#  }
+#}
 
 #-------------------------
 # ECS security group
@@ -95,46 +95,46 @@ resource "aws_security_group" "ecs_sg" {
 #-------------------------
 # Orders security group
 #-------------------------
-resource "aws_security_group" "orders_sg" {
-  name   = "orders-sg"
-  vpc_id = aws_vpc.main.id
-
-  ingress {
-    from_port       = 8081
-    to_port         = 8081
-    protocol        = "tcp"
-    security_groups = [aws_security_group.gateway_sg.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
+#resource "aws_security_group" "orders_sg" {
+#  name   = "orders-sg"
+#  vpc_id = aws_vpc.main.id
+#
+#  ingress {
+#    from_port       = 8081
+#    to_port         = 8081
+#    protocol        = "tcp"
+#    security_groups = [aws_security_group.gateway_sg.id]
+#  }
+#
+#  egress {
+#    from_port   = 0
+#    to_port     = 0
+#    protocol    = "-1"
+#    cidr_blocks = ["0.0.0.0/0"]
+#  }
+#}
 
 #-------------------------
 # Payments security group
 #-------------------------
-resource "aws_security_group" "payments_sg" {
-  name   = "payments-sg"
-  vpc_id = aws_vpc.main.id
-
-  ingress {
-    from_port       = 8082
-    to_port         = 8082
-    protocol        = "tcp"
-    security_groups = [aws_security_group.gateway_sg.id]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-}
+#resource "aws_security_group" "payments_sg" {
+#  name   = "payments-sg"
+#  vpc_id = aws_vpc.main.id
+#
+#  ingress {
+#    from_port       = 8082
+#    to_port         = 8082
+#    protocol        = "tcp"
+#    security_groups = [aws_security_group.gateway_sg.id]
+#  }
+#
+#  egress {
+#    from_port   = 0
+#    to_port     = 0
+#    protocol    = "-1"
+#    cidr_blocks = ["0.0.0.0/0"]
+#  }
+#}
 
 #-------------------------
 # RDS security group

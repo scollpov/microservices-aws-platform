@@ -19,7 +19,7 @@ resource "aws_lb" "main" {
 }
 
 #-------------------------
-# Target Group (Garteway)
+# Target Group (Gateway)
 #-------------------------
 resource "aws_lb_target_group" "gateway_tg" {
   name        = "gateway-tg"

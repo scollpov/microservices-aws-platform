@@ -78,9 +78,9 @@ resource "aws_ecs_task_definition" "orders" {
       ]
 
       environment = [
-        { name  = "SPRING_DATASOURCE_URL", value = "jdbc:mysql://${aws_db_instance.orders.address}:3306/ordersdb"},
-        { name  = "SPRING_DATASOURCE_USERNAME", value = "ordersuser"},
-        { name  = "SPRING_DATASOURCE_PASSWORD", value = "ChangeMe123!"},
+        { name = "SPRING_DATASOURCE_URL", value = "jdbc:mysql://${aws_db_instance.orders.address}:3306/ordersdb" },
+        { name = "SPRING_DATASOURCE_USERNAME", value = "ordersuser" },
+        { name = "SPRING_DATASOURCE_PASSWORD", value = "ChangeMe123!" },
         { name = "KAFKA_ENABLED", value = "true" },
         { name = "SPRING_KAFKA_BOOTSTRAP_SERVERS", value = "kafka.microservices.local:9092" }
       ]
@@ -122,9 +122,9 @@ resource "aws_ecs_task_definition" "payments" {
       ]
 
       environment = [
-        { name  = "SPRING_DATASOURCE_URL", value = "jdbc:mysql://${aws_db_instance.payments.address}:3306/paymentsdb"},
-        { name = "SPRING_DATASOURCE_USERNAME", value = "paymentsuser"},
-        { name = "SPRING_DATASOURCE_PASSWORD", value = "ChangeMe123!"},
+        { name = "SPRING_DATASOURCE_URL", value = "jdbc:mysql://${aws_db_instance.payments.address}:3306/paymentsdb" },
+        { name = "SPRING_DATASOURCE_USERNAME", value = "paymentsuser" },
+        { name = "SPRING_DATASOURCE_PASSWORD", value = "ChangeMe123!" },
         { name = "SPRING_KAFKA_BOOTSTRAP_SERVERS", value = "kafka.microservices.local:9092" }
       ]
 

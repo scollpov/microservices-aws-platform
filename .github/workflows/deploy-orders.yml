@@ -46,3 +46,11 @@ jobs:
 
           docker build -t $IMAGE_URI ./services/orders
           docker push $IMAGE_URI
+
+      - name: Force ECS redeploy
+        run: |
+          aws ecs update-service \
+            --cluster microservices-cluster \
+            --service orders-service \
+            --force-new-deployment \
+            --region ${{ env.AWS_REGION }}

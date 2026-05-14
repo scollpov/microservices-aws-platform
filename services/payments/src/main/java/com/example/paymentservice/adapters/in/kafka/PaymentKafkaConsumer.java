@@ -15,11 +15,6 @@ public class PaymentKafkaConsumer {
         this.useCase = useCase;
     }
 
-    @PostConstruct
-    public void init(){
-        System.out.println("I'm there!!!");
-    }
-
     @KafkaListener(topics = "order-created", groupId = "payment-debug-v9", containerFactory = "kafkaListenerContainerFactory")
     public void handle(OrderCreatedEvent event){
         System.out.println("Received event: " + event);

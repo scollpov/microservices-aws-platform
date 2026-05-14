@@ -180,6 +180,7 @@ resource "aws_ecs_task_definition" "kafka" {
         { name = "KAFKA_CONTROLLER_LISTENER_NAMES", value = "CONTROLLER" },
         { name = "KAFKA_INTER_BROKER_LISTENER_NAME", value = "PLAINTEXT" },
         { name = "CLUSTER_ID", value = "MkU3OEVBNTcwNTJENDM2Qk" },
+        { name = "KAFKA_AUTO_CREATE_TOPICS_ENABLE", value = "true" }
       ]
 
       logConfiguration = {

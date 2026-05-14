@@ -11,7 +11,7 @@ import java.util.UUID;
 public class CreatePaymentService implements CreatePaymentUseCase {
 
     private static final Logger log =
-        LoggerFactory.getLogger(PaymentKafkaConsumer.class);
+        LoggerFactory.getLogger(CreatePaymentService.class);
 
     private final PaymentRepositoryPort repository;
 

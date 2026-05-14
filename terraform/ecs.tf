@@ -180,6 +180,11 @@ resource "aws_ecs_task_definition" "kafka" {
         { name = "KAFKA_CONTROLLER_LISTENER_NAMES", value = "CONTROLLER" },
         { name = "KAFKA_INTER_BROKER_LISTENER_NAME", value = "PLAINTEXT" },
         { name = "CLUSTER_ID", value = "MkU3OEVBNTcwNTJENDM2Qk" },
+        { name = "KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR", value = "1" },
+        { name = "KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR", value = "1" },
+        { name = "KAFKA_TRANSACTION_STATE_LOG_MIN_ISR", value = "1" },
+        { name = "KAFKA_DEFAULT_REPLICATION_FACTOR", value = "1" },
+        { name = "KAFKA_MIN_INSYNC_REPLICAS", value = "1" },
         { name = "KAFKA_AUTO_CREATE_TOPICS_ENABLE", value = "true" }
       ]
 

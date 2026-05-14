@@ -1,7 +1,6 @@
 package com.example.paymentservice.application;
 
 import com.example.paymentservice.domain.Payment;
-import com.example.paymentservice.messaging.PaymentKafkaConsumer;
 import com.example.paymentservice.ports.in.CreatePaymentUseCase;
 import com.example.paymentservice.ports.out.PaymentRepositoryPort;
 import org.slf4j.Logger;

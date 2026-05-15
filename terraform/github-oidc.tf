@@ -53,7 +53,7 @@ resource "aws_iam_role_policy" "github_ecs_deploy" {
           aws_ecs_service.gateway.id,
           aws_ecs_service.orders.id,
           aws_ecs_service.payments.id
-        ]      
+        ]
       }
     ]
   })

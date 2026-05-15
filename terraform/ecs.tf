@@ -82,7 +82,9 @@ resource "aws_ecs_task_definition" "orders" {
         { name = "SPRING_DATASOURCE_USERNAME", value = "ordersuser" },
         { name = "SPRING_DATASOURCE_PASSWORD", value = "ChangeMe123!" },
         { name = "KAFKA_ENABLED", value = "true" },
-        { name = "SPRING_KAFKA_BOOTSTRAP_SERVERS", value = "kafka.microservices.local:9092" }
+        { name = "SPRING_KAFKA_BOOTSTRAP_SERVERS", value = "kafka.microservices.local:9092" },
+        { name = "REDIS_HOST", value = aws_elasticache_cluster.redis.cache_nodes[0].address },
+        { name = "REDIS_PORT", value = "6379" }
       ]
 
       logConfiguration = {

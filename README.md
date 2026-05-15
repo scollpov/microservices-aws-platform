@@ -12,6 +12,8 @@ The project includes:
 - Orders microservice
 - Payments microservice
 - Event-driven communication with Kafka
+- Redis distributed caching with TTL expiration
+- Flyway database migrations
 - AWS Cognito authentication
 - Infrastructure as Code with Terraform
 - CI/CD with GitHub Actions
@@ -45,18 +47,17 @@ https://github.com/scollpov/microservices-aws-platform
                 v                         v
        +--------+--------+      +---------+--------+
        | Orders Service  |      | Payments Service |
-       +--------+--------+      +---------+--------+
-                |
-                |
-                v
-         +------+------+
-         | Apache Kafka|
-         +------+------+
-                |
-                v
-       +--------+--------+
-       | Payments Consumer|
-       +------------------+
+       +---+--------+----+      +---------+--------+
+           |        |                     |
+           |        v                     |
+           |    +---+---+                 |
+           |    | Redis |                 |
+           |    +-------+                 |
+           |                              |
+           v                              v
+    +------+------+             +---------+--------+
+    | Apache Kafka|             | Payments Consumer|
+    +-------------+             +------------------+
 ```
 
 ---
@@ -87,12 +88,15 @@ Responsibilities:
 - Create orders
 - Publish `OrderCreatedEvent` to Kafka
 - Persist orders in MySQL
+- Cache order lookups in Redis
 
 Technology:
 
 - Spring Boot
 - Spring Data JPA
 - Kafka Producer
+- Redis Cache
+- Flyway
 - MySQL
 
 ---
@@ -109,6 +113,7 @@ Technology:
 
 - Spring Boot
 - Kafka Consumer
+- Flyway
 - MySQL
 
 The Payments service follows an event-driven architecture and does not expose public REST APIs.
@@ -167,6 +172,44 @@ PAYMENT SAVED: paymentId=6d939314-9690-4868-9d28-3cc17211c745, orderId=10, amoun
 
 ---
 
+# Distributed Cache
+
+The Orders service uses Redis distributed caching to reduce database load and improve response times.
+
+Features:
+
+- Cache-aside pattern with `@Cacheable`
+- TTL-based expiration
+- Shared distributed cache
+- Spring Cache abstraction
+
+Flow:
+
+1. First request reads from MySQL
+2. Response is cached in Redis
+3. Subsequent requests are served from cache
+
+---
+
+# Database Migration
+
+Database schema migrations are managed using Flyway.
+
+Benefits:
+
+- Version-controlled database schema
+- Automated migrations during deployment
+- Consistent environments
+- Safer database evolution
+
+Migration scripts are located under:
+
+```text
+src/main/resources/db/migration
+```
+
+---
+
 # AWS Infrastructure
 
 Infrastructure is fully provisioned using Terraform.
@@ -183,6 +226,7 @@ AWS services used:
 - IAM
 - VPC
 - Security Groups
+- ElastiCache Redis
 
 Infrastructure is defined under:
 
@@ -330,6 +374,8 @@ Pipelines stop automatically if tests fail.
 - Spring Cloud Gateway
 - Spring Data JPA
 - Kafka
+- Redis
+- Flyway
 
 ## Cloud & DevOps
 
@@ -338,6 +384,7 @@ Pipelines stop automatically if tests fail.
 - AWS ECR
 - AWS RDS
 - AWS CloudWatch
+- AWS ElastiCache Redis
 - Terraform
 - GitHub Actions
 - Docker

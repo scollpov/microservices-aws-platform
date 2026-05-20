@@ -18,6 +18,7 @@ The project includes:
 - Infrastructure as Code with Terraform
 - CI/CD with GitHub Actions
 - ECS Fargate deployment
+- ECS Fargate auto-scaling based on CPU utilization
 - Centralized logging with CloudWatch
 
 GitHub Repository:
@@ -217,6 +218,7 @@ Infrastructure is fully provisioned using Terraform.
 AWS services used:
 
 - ECS Fargate
+- ECS Service Auto Scaling
 - ECR
 - ALB
 - RDS MySQL
@@ -233,6 +235,25 @@ Infrastructure is defined under:
 ```text
 terraform/
 ```
+
+---
+
+# Auto Scaling
+
+The ECS Fargate services include CPU-based auto-scaling policies managed with Terraform.
+
+Features:
+
+- Minimum capacity of 1 task per service
+- Maximum capacity of 3 tasks per service
+- Target tracking policy based on average CPU utilization
+- Automatic scale-out and scale-in behavior
+
+Configured services:
+
+- Gateway Service
+- Orders Service
+- Payments Service
 
 ---
 

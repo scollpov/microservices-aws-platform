@@ -406,9 +406,10 @@ Pipelines stop automatically if tests fail.
 - AWS RDS
 - AWS CloudWatch
 - AWS ElastiCache Redis
+- Docker
 - Terraform
 - GitHub Actions
-- Docker
+- ECS Service Auto Scaling
 
 ---
 
